@@ -21,18 +21,21 @@ def perfect_predict(text):
 app = Flask(__name__)
 @app.route('/predict', methods=['GET', 'POST'])
 def add_message():
-    content = request.json
-    prediction = int(predict([content['mytext']])[0])
-    prediction = False if prediction else True
-    if not prediction:
-        try:
-            print("Using perfect predict...")
-            perfect_predictin = perfect_predict()
-            prediction = perfect_predictin
-        except:
-            pass
+    try:
+        content = request.json
+        prediction = int(predict([content['mytext']])[0])
+        prediction = False if prediction else True
+        if not prediction:
+            try:
+                print("Using perfect predict...")
+                perfect_predictin = perfect_predict()
+                prediction = perfect_predictin
+            except:
+                pass
 
-    return jsonify({"prediction": prediction})
+        return jsonify({"prediction": prediction})
+    except: 
+        return jsonify({})
 
 if __name__ == '__main__':
     app.run(debug=True)
