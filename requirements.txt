@@ -1,8 +1,8 @@
 joblib==1.1.0
 numpy
 pandas
-scikit-learn==1.1.1
+scikit-learn
 requests
 flask
 gunicorn
-scipy>=1.8.1; python_version >= '3.10'
+scipy
