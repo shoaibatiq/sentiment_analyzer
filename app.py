@@ -16,7 +16,7 @@ def perfect_predict(text):
 	response = response.json()
 	sentiment = response['sentiment_analysis'].lower()
 	prediction = sentiment[:3] not in [ 'neg', 'thr', 'hos']
-	return prediction
+	return prediction, sentiment
 
 app = Flask(__name__)
 @app.route('/predict', methods=['GET', 'POST'])
@@ -24,17 +24,21 @@ def add_message():
     try:
         content = request.json
         prediction = int(predict([content['mytext']])[0])
-        prediction = False if prediction else True
-        if not prediction:
+        prediction = {"prediction": False} if prediction else {"prediction": True} 
+        prediction['sentiment'] = None
+        if not prediction["prediction"]:
             try:
                 print("Using perfect predict...")
-                perfect_predictin = perfect_predict()
-                prediction = perfect_predictin
-            except:
-                pass
+                perfect_predictin, sentiment = perfect_predict(content['mytext'])
+                prediction['prediction'] = perfect_predictin
+                prediction['sentiment'] = sentiment
+                
+            except Exception as e:
+                print(e)
 
-        return jsonify({"prediction": prediction})
-    except: 
+        return jsonify(prediction)
+    except Exception as e: 
+        print(e)
         return jsonify({})
 
 if __name__ == '__main__':
